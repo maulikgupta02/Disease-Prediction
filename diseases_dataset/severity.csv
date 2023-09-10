@@ -1,0 +1,42 @@
+,disease,severity,time,specialisation
+0,Fungal infection,low,19min,Dermatologist
+1,Allergy,low,14min,Allergist
+2,GERD,low,28min,Gastroenterologist
+3,Chronic cholestasis,low,16min,Gastroenterologist
+4,Drug Reaction,low,14min,Dermatologist
+5,Peptic ulcer diseae,low,16min,Gastroenterologist
+6,AIDS,low,22min,Immunologist
+7,Diabetes ,low,30min,Endocrinologist
+8,Gastroenteritis,low,33min,Gastroenterologist
+9,Bronchial Asthma,low,28min,Allergist
+10,Hypertension ,low,39min,Cardiologist
+11,Migraine,low,36min,Neurologist
+12,Cervical spondylosis,low,10min,Neurologist
+13,Paralysis (brain hemorrhage),low,40min,Neurologist
+14,Jaundice,low,22min,Gastroenterologist
+15,Malaria,high,27min,General Physician
+16,Chicken pox,low,26min,General Physician
+17,Dengue,high,32min,General Physician
+18,Typhoid,high,30min,General Physician
+19,hepatitis A,low,14min,Gastroenterologis
+20,Hepatitis B,high,29min,Gastroenterologist
+21,Hepatitis C,high,40min,Gastroenterologist
+22,Hepatitis D,high,29min,Gastroenterologist
+23,Hepatitis E,high,39min,Gastroenterologist
+24,Alcoholic hepatitis,high,27min,Gastroenterologist
+25,Tuberculosis,high,28min,Pulmonologist
+26,Common Cold,low,23min,General Physician
+27,Pneumonia,high,28min,Pulmonologist
+28,Dimorphic hemmorhoids(piles),low,11min,Proctologist
+29,Heart attack,high,37min,Cardiologist
+30,Varicose veins,high,11min,Dermatologist
+31,Hypothyroidism,low,39min,Endocrinologist
+32,Hyperthyroidism,low,30min,Endocrinologist
+33,Hypoglycemia,high,38min,Endocrinologist
+34,Osteoarthristis,low,10min,Rheumatologist
+35,Arthritis,low,35min,Rheumatologist
+36,(vertigo) Paroymsal  Positional Vertigo,low,10min,Neurologist
+37,Acne,low,28min,Dermatologist
+38,Urinary tract infection,low,28min,Urologist
+39,Psoriasis,low,29min,Dermatologist
+40,Impetigo,low,15min,Dermatologist
