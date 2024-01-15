@@ -2,6 +2,7 @@ import io
 import pdfplumber
 import re
 from flask import Flask, request, jsonify
+import pandas as pd
 
 def extract_text(pdf_file):
   with pdfplumber.open(pdf_file) as pdf:
@@ -11,70 +12,63 @@ def extract_text(pdf_file):
     return text
 
 def extract_details(text):
-  # Extract patient name
-  name = re.search(r"Patient Name: (.*?)\n", text).group(1)
+  test_pattern = r"([A-Za-z &()]+)\s+([\d.]+)\s+([a-zA-Z/]+)\s+([\d.-]+)\s+([- \d. -]+)"
+  matches = re.findall(test_pattern, text)
 
-  # Extract patient age
-  age = re.search(r"Age: (.*?)\n", text).group(1)
+  # Create a dictionary to store the results
+  test_results = []
 
-  # Extract patient gender
-  gender = re.search(r"Gender: (.*?)\n", text).group(1)
+  # Extracted information
+  for match in matches:
+      test_name = match[0].strip()
+      if test_name=="Total":
+        continue
+      result = float(match[1].strip())
+      unit = match[2].strip()
+      lower_limit = float(match[3].strip())
+      upper_limit = float(match[4].strip()[2:])
+      # print(match)
 
-  # Extract date of birth
-  dob = re.search(r"Date of Birth: (.*?)\n", text).group(1)
+      temp = {
+          "test_name":test_name,
+          "result": result,
+          "unit": unit,
+          "lower_limit": lower_limit,
+          "upper_limit": upper_limit
+      }
 
-  # Extract lab tests
-  tests = re.findall(r"Test Name: (.*?)\n", text)
+      if test_name=="Glucose Fasting":
+        if result > (lower_limit+upper_limit)/2:
+          temp["disease"]="diabetes"
+          df=pd.read_csv("exercises.csv")
+          exercises=[str(i) for i in list(df[temp["disease"]].values)]
+          for j in range(len(exercises)):
+            if exercises[j]=='nan':
+              exercises=exercises[:j]
+              break
+          temp["body_parts"]=exercises
 
-  # Extract test results
-  results = re.findall(r"Result: (.*?)\n", text)
+      test_results.append(temp)
 
-  # Extract test units
-  units = re.findall(r"Units: (.*?)\n", text)
+  return test_results
 
-  # Extract suitable range
-  interval = re.findall(r"Bio. Ref. Interval: (.*?)\n", text)
 
-  return {
-      "name": name,
-      "age": age,
-      "gender": gender,
-      "dob": dob,
-      "tests": tests,
-      "results": results,
-      "units": units
-  }
+# print(extract_details((extract_text("sample_report.pdf"))))
 
-text=(extract_text("WM17S.pdf"))
 
-test_pattern = r"([A-Za-z &()]+)\s+([\d.]+)\s+([a-zA-Z/]+)\s+([\d.-]+)\s+([- \d. -]+)"
-matches = re.findall(test_pattern, text)
+app = Flask(__name__)
 
-# Create a dictionary to store the results
-test_results = []
+@app.route('/')
+def index():
+  return "Hello, World!"
 
-# Extracted information
-for match in matches:
-    test_name = match[0].strip()
-    if test_name=="Total":
-       continue
-    result = float(match[1].strip())
-    unit = match[2].strip()
-    lower_limit = float(match[3].strip())
-    upper_limit = float(match[4].strip()[2:])
-    # print(match)
+@app.route('/extract', methods=['POST'])
+def extract():
+  if request.method == 'POST':
+    pdf_file = request.files['pdf_file']
+    text = extract_text(pdf_file)
+    details = extract_details(text)
+    return jsonify(details)
 
-    temp = {
-        "result": result,
-        "unit": unit,
-        "lower_limit": lower_limit,
-        "upper_limit": upper_limit
-    }
-
-    if test_name=="Glucose Fasting":
-      if result > (lower_limit+upper_limit)/2:
-        temp["disease"]="glucose"
-
-    test_results.append(temp)
-
-print(test_results)
+if __name__ == '__main__':
+  app.run(debug=True)
