@@ -41,12 +41,19 @@ def extract_details(text):
         if result > (lower_limit+upper_limit)/2:
           temp["disease"]="diabetes"
           df=pd.read_csv("exercises.csv")
+          df2=pd.read_csv("food_items.csv")
           exercises=[str(i) for i in list(df[temp["disease"]].values)]
           for j in range(len(exercises)):
             if exercises[j]=='nan':
               exercises=exercises[:j]
               break
           temp["body_parts"]=exercises
+          food_items=[str(i) for i in list(df2[temp["disease"]].values)]
+          for j in range(len(food_items)):
+            if food_items[j]=='nan':
+              food_items=food_items[:j]
+              break
+          temp["food_items"]=food_items
 
       test_results.append(temp)
 
